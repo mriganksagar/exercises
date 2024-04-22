@@ -48,7 +48,7 @@ public:
 // if we need to match s3 with * p2, and it does as well
 // then we can also match s2 s3 with * p2
 
-class Solution {
+class Solution2 {
 public:
     bool isMatch(string s, string p) {
         int si = 0;
