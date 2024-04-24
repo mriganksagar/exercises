@@ -53,6 +53,16 @@ vector<int> maxSubArrayWithElementAsMax(const vector<int> &nums)
         st.push(i);
         result[i] = rightGreater[i] - leftGreaterIndex - 1;
     }
+    //if there are douplicates then use unorderedMap to find the best outcome of all duplicates
+    unordered_map<int, int> umap;
+    for(int i = 0; i < nums.size(); i++){
+        if(umap[nums[i]]) umap[nums[i]] = max(umap[nums[i]], result[i]);
+        else umap[nums[i]] = result[i];
+    }
+    for(int& val: result){
+        val = max(val, umap[val]);
+    }
+    /////////////////////////////////////////////////////
     return result;
 }
 
