@@ -1,3 +1,14 @@
+// https://leetcode.com/problems/permutation-sequence/
+
+// to solve this i did not use recursion and backtracking 
+// cause there exists a pattern 
+// lets consider the all possible result space you can divide that into n parts where n is also the numbers of number in the array or 1, 2, .. n in the case of this question
+// first part will have the first element , second will have the second element and so on 
+// through this we can identify the first number in the sequence, 
+// to find the second number , the possible result space will reduce by factor of the previous n and same logic can be applied 
+// to find the ith number , the result space reduce by factor of i+1
+// the current result space can be divided into  n-i+1 parts each part will be of length n-i factorial.
+// using this pattern makes it easier to find all the numbers in the resultant sequence
 #include<string>
 #include<vector>
 using namespace std;
