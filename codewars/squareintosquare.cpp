@@ -6,7 +6,7 @@ class Decomp
     n--;
     if(sum == 0)return true;
     else if(n==1)return false;
-    long long square = (n)*(n);
+    long long square = n*n;
     while(sum < square){
       n--;
       square = n*n;
@@ -24,12 +24,13 @@ class Decomp
   static std::vector<long long> decompose(long long n){
     std::vector<long long> result;
     if(decomposeHelper(n*n, n, result)){
-         for(int i = 0; i < result.size()/2; i++){
-             auto xx = result[i];
-             result[i]= result[result.size()-1-i];
-             result[result.size()-i-1] = xx; 
-         }
-         return result;
+      //reversing the array
+      for(int i = 0; i < result.size()/2; i++){
+          auto xx = result[i];
+          result[i]= result[result.size()-1-i];
+          result[result.size()-i-1] = xx; 
+      }
+      return result;
     }
     else return {};
   };
