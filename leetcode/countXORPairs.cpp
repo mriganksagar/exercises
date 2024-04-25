@@ -60,10 +60,8 @@ public:
         int count = 0;
         Trie myTrie(32);
         for(int num: nums){
-            int x = myTrie.countXorLowerThanValue(num, high);
-            count+=x;
-            x =  myTrie.countXorLowerThanValue(num, low);
-            count-=x;
+            count += myTrie.countXorLowerThanValue(num, high);
+            count -=  myTrie.countXorLowerThanValue(num, low);
             myTrie.insert(num);
         }
         return count;
