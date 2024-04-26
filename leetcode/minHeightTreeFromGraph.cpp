@@ -3,6 +3,8 @@
 #include<vector>
 #include<iostream>
 #include<cmath>
+#include<queue>
+#include<unordered_set>
 using namespace std;
 
 
@@ -63,5 +65,48 @@ public:
         vector<int> result;
         findMinHeightTreesHelper(tree, result);
         return result;
+    }
+
+    // this method is slow
+    // i can do better i remove all the leaf nodes at a time, and reduce the degrees (the number of node a node is connected to ) and continue to do so for the new nodes 
+
+    // my solution was failing for the case where there is only single node
+    // thats why put the if (n == 1 ) condition in the start so commenting this
+    // though i can avoid it if i just add a node to the leaf node if its degree <= 1 instead of degree == 1 (as done before) 
+    vector<int> findMinHeightTreesNew(int n, vector<vector<int>>& edges){
+        // if(n == 1) return {0};
+        vector<vector<int>> graph(n, vector<int>() );
+        for(auto edge:edges){
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
+        }
+
+        vector<int> degrees(n,0);
+        for(auto edge: edges){
+            degrees[edge[0]]++;
+            degrees[edge[1]]++;
+        }
+        int nodesInTree = n;
+        unordered_set<int> leafnodes;
+        for(int node = 0; node < n; node++){
+            if(degrees[node] <= 1){
+                leafnodes.insert(node);
+            }
+        }
+
+        while(nodesInTree>2){
+            unordered_set<int> nextLeafnodes;
+            for(auto leafnode: leafnodes){
+                nodesInTree--;
+                for(auto neighbour: graph[leafnode]) {
+                    if(degrees[neighbour] == 0) continue;
+                    degrees[neighbour]--;
+                    if(degrees[neighbour] == 1) nextLeafnodes.insert(neighbour);
+                }
+                degrees[leafnode] = 0;
+            }
+            leafnodes = nextLeafnodes;
+        }            
+        return vector<int>(leafnodes.begin(), leafnodes.end());
     }
 };
