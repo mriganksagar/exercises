@@ -110,3 +110,56 @@ public:
         return vector<int>(leafnodes.begin(), leafnodes.end());
     }
 };
+
+// using queue instead of unordered map (not much difference in performance though)
+class Solution2 {
+public:
+ vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges){
+        if(n == 1) return {0};
+        if(n == 2) return {0,1};
+        vector<vector<int>> graph(n, vector<int>() );
+        for(auto edge:edges){
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
+        }
+
+        vector<int> degrees(n,0);
+        for(auto edge: edges){
+            degrees[edge[0]]++;
+            degrees[edge[1]]++;
+        }
+        int nodesInTree = n;
+        // unordered_set<int> leafnodes;
+        queue<int> leafnodes;
+        for(int node = 0; node < n; node++){
+            if(degrees[node] <= 1){
+                leafnodes.push(node);
+            }
+        }
+        leafnodes.push(-1);
+        while(true ){
+            int leafnode = leafnodes.front();
+            leafnodes.pop();
+            if(leafnode == -1){
+                if(nodesInTree <= 2) break;
+                else {
+                    leafnodes.push(-1);
+                    continue;
+                }
+            }
+            nodesInTree--;
+            for(auto neighbour: graph[leafnode]) {
+                if(degrees[neighbour] == 0) continue;
+                degrees[neighbour]--;
+                if(degrees[neighbour] == 1) leafnodes.push(neighbour);
+            }
+            degrees[leafnode] = 0;
+        }          
+        vector<int> result;
+        while(!leafnodes.empty()) {
+            result.push_back(leafnodes.front());
+            leafnodes.pop();
+        }
+        return result;
+    }
+};
