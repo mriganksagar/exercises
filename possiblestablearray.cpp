@@ -233,3 +233,49 @@ public:
         return totalPermutations;
     }    
 };
+
+
+class Solution {
+public:
+    int mod = 1000000007;
+    int limitG;
+    int numberOfStableArraysH(int zero, int one, int consecutiveStart, int startCharacter, vector<vector<vector<vector<int>>>>&dp){
+       
+        if(consecutiveStart == 0) return 0;
+        else if((startCharacter == 0 and zero == 1 and one == 0) or (startCharacter == 1 and one ==1 and zero == 0)) 
+        {
+            return 1;
+        }
+
+        if(dp[startCharacter][consecutiveStart][zero][one] != -1) return dp[startCharacter][consecutiveStart][zero][one];
+        
+        int result = 0;
+        if(startCharacter == 0 and zero>0){
+            result += numberOfStableArraysH(zero -1,  one, consecutiveStart-1, 0 , dp)%mod;
+            result += numberOfStableArraysH(zero -1, one, limitG,  1, dp)%mod;
+            result = result%mod;
+        }
+        else if(startCharacter == 1 and one>0){
+            result += numberOfStableArraysH(zero, one-1, limitG, 0, dp)%mod;;
+            result += numberOfStableArraysH(zero, one-1, consecutiveStart-1, 1, dp)%mod;
+            result = result%mod;
+        }
+        dp[startCharacter][consecutiveStart][zero][one] = result;
+        return result;
+    }
+
+    int numberOfStableArrays(int zero, int one, int limit){
+        limitG = limit;
+        vector<vector<vector<vector<int>>>> dp(2, 
+            vector<vector<vector<int>>>(limit+1,
+                vector<vector<int>>(zero+1, 
+                    vector<int>(one+1, -1)
+                )
+            )
+        );
+        int result = 0;
+        result += numberOfStableArraysH(zero, one, limit, 0, dp)%mod;
+        result += numberOfStableArraysH(zero, one, limit, 1, dp)%mod;
+        return result%mod;
+    }
+};
