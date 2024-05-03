@@ -17,3 +17,5 @@ public:
         return nums.size()+1;
     }
 };
+
+// it was tricky to not use space at all and manipulate the array given
