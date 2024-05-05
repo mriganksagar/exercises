@@ -279,3 +279,118 @@ public:
         return result%mod;
     }
 };
+// this solution took 500 mbs of memory in leetcode while people achieved it in 20 mbs
+// this solution took nearly 1 second 
+
+
+class Solution2faster {
+public:
+    int mod = 1000000007;
+    int limitG;
+
+    int numberOfStableArraysH(int zero, int one, int startCharacter, vector<vector<vector<int>>>&dp){
+       
+        if(zero == 0 and one == 0) return 1;
+        if(dp[startCharacter][zero][one] != -1) return dp[startCharacter][zero][one];
+        
+        long result = 0;
+
+        if(startCharacter == 0){
+            for(int i = 1; i<=limitG and zero>=i; i++){
+                result += numberOfStableArraysH(zero - i, one, 1, dp)%mod;
+            }
+        }
+        else if(startCharacter == 1){
+            for(int i = 1; i<=limitG and one>=i; i++){
+                result += numberOfStableArraysH(zero, one - i, 0, dp)%mod;
+            }
+        }
+        dp[startCharacter][zero][one] = result%mod;
+        return result%mod;
+    }
+
+    int numberOfStableArrays(int zero, int one, int limit){
+        limitG = limit;
+        vector<vector<vector<int>>> dp(2, 
+            vector<vector<int>>(zero+1, 
+                vector<int>(one+1, -1)
+            )
+        );
+        int result = 0;
+        result += numberOfStableArraysH(zero, one, 0, dp)%mod;
+        result += numberOfStableArraysH(zero, one, 1, dp)%mod;
+        return result%mod;
+    }
+};
+// faster solution  tried it in part i problem, performs much better in memory and time, 20 mb and 200 ms 
+
+// lets do another time
+
+
+//another time logging in
+
+class SolutionFastest{
+public:
+    long long mod = 1000000007;
+    int limitG;
+
+    long long numberOfStableArraysH(int zero, int one, int startCharacter, vector<vector<vector<long long>>>&dp){
+        if(dp[startCharacter][zero][one] != -1) return dp[startCharacter][zero][one];
+        
+        long long result = 0;
+
+        if(startCharacter == 0){
+            if(zero > 0){
+                result +=  numberOfStableArraysH(zero - 1, one, 1, dp);
+                result +=  numberOfStableArraysH(zero - 1, one, 0, dp);
+                if(zero > limitG){
+                    result -= numberOfStableArraysH(zero -1 -limitG, one, 1, dp );
+                }
+            }
+        }
+        else if(startCharacter == 1){
+            if(one > 0){
+                result += numberOfStableArraysH(zero, one - 1, 0, dp);
+                result += numberOfStableArraysH(zero, one - 1, 1, dp);
+                if(one > limitG){
+                    result -= numberOfStableArraysH(zero, one -1 - limitG, 0, dp );
+                }
+            }    
+        }
+        result = (result+mod)%mod;
+        dp[startCharacter][zero][one] = result;
+        return result;
+    }
+
+
+    int numberOfStableArrays(int zero, int one, int limit){
+        limitG = limit;
+        vector<vector<vector<long long>>> dp(2, 
+            vector<vector<long long>>(zero+1, 
+                vector<long long>(one+1, -1)
+            )
+        );
+        dp[0][0][0] = dp[0][1][0] = dp[1][0][0] = dp[1][0][1] = 1;
+        dp[0][0][1] = dp[1][1][0] = 0;
+        long long result = 0;
+        result = (result + numberOfStableArraysH(zero, one, 0, dp))%mod;
+        cout<<result<<endl;
+        result += numberOfStableArraysH(zero, one, 1, dp);
+        cout<<result<<endl;
+        return result%mod;
+    }
+};
+
+
+// this is very simpler
+// to get with a zeros and b ones
+// i can make it into two problems get permuations that start wih zero, with a zero and b ones
+// plus start with one, with a zero and b ones
+// to get start with zero, a zeros and b ones
+// i can get start with zero, a-1 zeros and b ones plus start with one, a-1 zeros and b one
+// but the subprobem with starting zeros
+// upon combining the zero in front can lead to zeros more than limit
+// so i subtract the permutations from the subproblem that can lead to invalid condition
+// there could be limit number of zeros in start and then subproblem with (remaining zeros and one)
+// these upon adding zero in from will lead to invalid condition
+// i need to subtract this 
