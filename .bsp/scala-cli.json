@@ -1,0 +1,20 @@
+{
+  "name": "scala-cli",
+  "argv": [
+    "/home/mishu/.sdkman/candidates/scalacli/current/bin/scala-cli",
+    "bsp",
+    "--json-options",
+    "/home/mishu/code/exercises/.scala-build/ide-options-v2.json",
+    "--json-launcher-options",
+    "/home/mishu/code/exercises/.scala-build/ide-launcher-options.json",
+    "--envs-file",
+    "/home/mishu/code/exercises/.scala-build/ide-envs.json",
+    "/home/mishu/code/exercises"
+  ],
+  "version": "1.5.1",
+  "bspVersion": "2.1.1",
+  "languages": [
+    "scala",
+    "java"
+  ]
+}
