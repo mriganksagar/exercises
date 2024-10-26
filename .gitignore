@@ -2,3 +2,5 @@
 sheit/
 .vscode/
 **.out
+.metals/
+.scala-build/
