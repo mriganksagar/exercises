@@ -40,7 +40,6 @@ public:
 int main(){
     Solution* sol = new Solution();
     vector<int> nums = {1,5,11,6};
-    cout<<"sup mf"<<endl;
     bool ans = sol->canPartition(nums);
     cout << ans <<endl;
 }
