@@ -1,11 +1,4 @@
-import ListQuestions.lastElementOfList
-import ListQuestions.secondLastElement
-import ListQuestions.findKthElementOfList
-import ListQuestions.countElementsInList
-import ListQuestions.reverseAList
-import scala.compiletime.ops.boolean
-import ListQuestions.isPalindrome
-import ListQuestions.flattenNestedList
+import scala.annotation.tailrec
 object ListQuestions {
   def lastElementOfList[T](l: List[T]): Option[T] = {
     l match
@@ -73,17 +66,49 @@ object ListQuestions {
 
     helper(l, Nil)
   }
-    
-  // given a list containing nested lists, flatten it all   
-  def flattenNestedList[T](list: List[Any]): List[Any] = myFlatmap(list){ 
+
+  // given a list containing nested lists, flatten it all
+  def flattenNestedList(list: List[Any]): List[Any] = myFlatmap(list) {
     case e: List[_] => flattenNestedList(e)
-    case e => List(e)
+    case e          => List(e)
   }
 
+  // eliminate consecutive duplicate elements
+  def elimiateConsecutiveDuplicates[T](l: List[T]): List[T] = l match
+    case e1 :: e2 :: tail if e1 == e2 =>
+      elimiateConsecutiveDuplicates(e2 :: tail)
+    case e1 :: e2 :: tail => e1 :: elimiateConsecutiveDuplicates(e2 :: tail)
+    case ls               => ls
+
+  // pack consecutive duplicate elements of list into sublists
+  def packConsecutiveDuplicatesIntoList[T](l:List[T]): List[List[T]] = {
+    @tailrec
+    def helper(list:List[T], acc: List[List[T]]): List[List[T]] = (list, acc) match
+      case (elem::tail, (a::as)::ass) if elem == a => helper(tail, (elem::a::as)::ass) 
+      case (elem::tail, _) => helper(tail, List(elem)::acc)
+      case (Nil, _) => acc.reverse
+    
+    helper(l, Nil)
+  }
+
+  //P 10 run length encoding of a list return list(a,a,b) as list((2,a), (1,b))
+  def runLengthEncodingOfList[T](list:List[T]): List[(Int, T)] = {
+    val packedList = packConsecutiveDuplicatesIntoList(list)
+    packedList.map(e => (e.length, e.head))
+  }
+
+  // p11 modified run length encoding return list (a,a,b) as list((2,a), b)
+  def modifiedRunLengthEncoding[T](list:List[T]): List[T | (Int, T)] = {
+    val packedList = packConsecutiveDuplicatesIntoList(list)
+    packedList.map{ sl => sl match
+      case e:: Nil => e
+      case e::es => (sl.length, e)
+    }
+  }
 }
 
 object TestListQuestions extends App {
-
+  import ListQuestions._
   // test last Element
   def test1(): Unit = {
     println(lastElementOfList(List(1, 3, 2, 6, 3)))
@@ -125,11 +150,38 @@ object TestListQuestions extends App {
     println(isPalindrome(List.empty[Int]))
   }
 
-
   // check flattening list
   def testFlatteningList(): Unit = {
-    println(flattenNestedList(List(List(1,2,3), 4, List(13,14,15,List(30,40, List(411))), List.empty)))
+    println(
+      flattenNestedList(
+        List(
+          List(1, 2, 3),
+          4,
+          List(13, 14, 15, List(30, 40, List(411))),
+          List.empty
+        )
+      )
+    )
   }
 
-  testFlatteningList()
+  // check eliminate consecutive duplicates
+  def testEliminateConsecutiveDuplicates(): Unit = {
+    println(
+      elimiateConsecutiveDuplicates(List(1, 1, 1, 2, 2, 3, 4, 5, 6, 6, 5))
+    )
+  }
+
+  // check pack consecutive duplicate elements
+  def testPackConsecutiveDuplicateElementsIntoList():Unit = {
+    println(packConsecutiveDuplicatesIntoList(List(1,2,2,3,4,4,4,4,5,6)))
+    println(packConsecutiveDuplicatesIntoList(List.empty[Int]))
+  }
+
+  // check modified run length encoding
+  def testModifiedRunLengthEncoding():Unit = {
+    println(modifiedRunLengthEncoding(List(1,3,4,4,4,5,5,6)))
+    println(modifiedRunLengthEncoding(List.empty[Int]))
+  }
+
+  
 }
