@@ -81,29 +81,64 @@ object ListQuestions {
     case ls               => ls
 
   // pack consecutive duplicate elements of list into sublists
-  def packConsecutiveDuplicatesIntoList[T](l:List[T]): List[List[T]] = {
+  def packConsecutiveDuplicatesIntoList[T](l: List[T]): List[List[T]] = {
     @tailrec
-    def helper(list:List[T], acc: List[List[T]]): List[List[T]] = (list, acc) match
-      case (elem::tail, (a::as)::ass) if elem == a => helper(tail, (elem::a::as)::ass) 
-      case (elem::tail, _) => helper(tail, List(elem)::acc)
-      case (Nil, _) => acc.reverse
-    
+    def helper(list: List[T], acc: List[List[T]]): List[List[T]] =
+      (list, acc) match
+        case (elem :: tail, (a :: as) :: ass) if elem == a =>
+          helper(tail, (elem :: a :: as) :: ass)
+        case (elem :: tail, _) => helper(tail, List(elem) :: acc)
+        case (Nil, _)          => acc.reverse
+
     helper(l, Nil)
   }
 
-  //P 10 run length encoding of a list return list(a,a,b) as list((2,a), (1,b))
-  def runLengthEncodingOfList[T](list:List[T]): List[(Int, T)] = {
+  // P 10 run length encoding of a list return list(a,a,b) as list((2,a), (1,b))
+  def runLengthEncodingOfList[T](list: List[T]): List[(Int, T)] = {
     val packedList = packConsecutiveDuplicatesIntoList(list)
     packedList.map(e => (e.length, e.head))
   }
 
   // p11 modified run length encoding return list (a,a,b) as list((2,a), b)
-  def modifiedRunLengthEncoding[T](list:List[T]): List[T | (Int, T)] = {
+  def modifiedRunLengthEncoding[T](list: List[T]): List[T | (Int, T)] = {
     val packedList = packConsecutiveDuplicatesIntoList(list)
-    packedList.map{ sl => sl match
-      case e:: Nil => e
-      case e::es => (sl.length, e)
+    packedList.collect { sl =>
+      sl match
+        case e :: Nil => e
+        case e :: es  => (sl.length, e)
     }
+  }
+
+  // p12 decode run length
+  def decodeRunLengthEncodedList[T](list: List[(Int, T)]): List[T] =
+    list.flatMap { e => List.fill(e._1)(e._2) }
+
+  // p13 run length encoding directly
+  def runLengthEncodingOfListDirectly[T](l: List[T]): List[(Int, T)] =
+    l.foldRight(List.empty[(Int, T)]) { (elem, acc) =>
+      acc match
+        case Nil => List((1, elem))
+        case (h_count, h_elem) :: tail if h_elem == elem =>
+          (h_count + 1, elem) :: tail
+        case _ => (1, elem) :: acc
+    }
+
+  // p14 duplicate the elements of a list
+  def duplicateElementsOfList[T](list:List[T]):List[T] = list.flatMap(e => List(e,e))
+
+  // p15 duplicate the elements of list n number of times
+  def duplicateElementsOfListNtimes[T](list:List[T])(n:Int): List[T] = list.flatMap{List.fill(n)(_)}
+
+  // p16 drop every nth element from the list
+  def dropEveryNthElementofList[T](list:List[T])(n:Int): List[T] = list.zipWithIndex.filter{(_, index) => (index+1)%n != 0}.map(_._1)
+
+  // p17 split list into two parts
+  def splitList[T](list:List[T])(k:Int): (List[T], List[T]) = {
+    def splitAt(current:List[T], result: List[T], count: Int): (List[T], List[T]) = current match
+      case Nil => (result.reverse, Nil)
+      case _ if count >= k => (result.reverse, current)
+      case e::tail => splitAt(tail, e::result, count+1)
+    splitAt(list, Nil, 0)
   }
 }
 
@@ -172,16 +207,59 @@ object TestListQuestions extends App {
   }
 
   // check pack consecutive duplicate elements
-  def testPackConsecutiveDuplicateElementsIntoList():Unit = {
-    println(packConsecutiveDuplicatesIntoList(List(1,2,2,3,4,4,4,4,5,6)))
+  def testPackConsecutiveDuplicateElementsIntoList(): Unit = {
+    println(
+      packConsecutiveDuplicatesIntoList(List(1, 2, 2, 3, 4, 4, 4, 4, 5, 6))
+    )
     println(packConsecutiveDuplicatesIntoList(List.empty[Int]))
   }
 
   // check modified run length encoding
-  def testModifiedRunLengthEncoding():Unit = {
-    println(modifiedRunLengthEncoding(List(1,3,4,4,4,5,5,6)))
+  def testModifiedRunLengthEncoding(): Unit = {
+    println(modifiedRunLengthEncoding(List(1, 3, 4, 4, 4, 5, 5, 6)))
     println(modifiedRunLengthEncoding(List.empty[Int]))
   }
 
-  
+  // check decode run length encoded list
+  def testDecodeRunLengthEncodedList(): Unit = {
+    println(
+      decodeRunLengthEncodedList(List((1, "a"), (2, "b"), (0, "c"), (1, "d")))
+    )
+  }
+
+  // check run lengthencoding of list directly
+  def testRunLengthEncodingOfListDirectly():Unit = {
+    println(runLengthEncodingOfListDirectly(List(1,1,2,3,3,3,4,5,1,5,6,6)))
+    println(runLengthEncodingOfListDirectly(List.empty))
+  }
+
+  // check duplicate N times of list
+  def testDuplicateElementsOfListNtimes(): Unit = {
+    println(duplicateElementsOfListNtimes(List(1,2,3,4,5))(5))
+  }
+
+  // test drop every nth element of list
+  def testDropEveryNthElementofList(): Unit  = {
+    println(dropEveryNthElementofList(List(1,2,3,4,5,6,7,8,9,0,11,12,13,14,15,16))(4))
+  }
+
+  // test split list
+  def testSplitList():Unit = {
+    println(splitList(List(1,2,3,4,5,6,7,8))(4))
+    println(splitList(List(1,2,3,4,5,6,7,8))(9))
+    println(splitList(List(1,2,3,4,5,6,7,8))(0))
+    println(splitList(List(1,2,3,4,5,6,7,8))(-2))
+  }
+
+
+
+
+
+
+
+  // testDecodeRunLengthEncodedList()
+  // testRunLengthEncodingOfListDirectly()
+  // testDuplicateElementsOfListNtimes()
+  // testDropEveryNthElementofList()
+  // testSplitList()
 }
