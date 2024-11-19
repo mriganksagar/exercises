@@ -26,7 +26,7 @@ object ArithmeticQuestions {
   def isPrime(number: Int): Boolean =
     primes.takeWhile(_ <= number).contains(number)
 
-    // can be improved by checking only primes till root of number and then divisibility
+  // alternatively, by checking only primes till root of number and then divisibility
   def isPrime_efficient(n: Int): Boolean = if n < 2 then false
   else primes takeWhile { _ <= Math.sqrt(n) } forall { e => n % e != 0 }
 
@@ -41,7 +41,8 @@ object ArithmeticQuestions {
     findGreatestCommonDivisor(a, b) == 1
 
   // p34 eulers totient function
-  def findEulersTotientFunction = ???
+  def findEulersTotientFunction(a: Int) = 
+    (2 until a).count( e => findCoPrime(a, e))
 
 
   // p35 find prime factors of a number
@@ -57,7 +58,17 @@ object ArithmeticQuestions {
 
   // p36 determine prime factors with multiplicity
   // i can modify p35 a little or use encoding run length from list questions
+  def findPrimeFactorsWithMultiplicity(n: Int): List[(Int, Int)] = {
+    def formatWithMultiplicity[T](l:List[T], acc: List[(T, Int)]): List[(T, Int)] = {
+      if l == Nil then acc.reverse
+      else {
+        val (first, last) = l.span(_==l.head)
+        formatWithMultiplicity(last, (first.head, first.size)::acc)
+      }
+    }
 
+    formatWithMultiplicity(findPrimeFactors(n), Nil)
+  }
   
 }
 
@@ -91,9 +102,15 @@ object TestArithmeticQuestions extends App {
     println(findPrimeFactors(133))
   }
 
+  // test prime factors with Multiplicity
+  def testFindPrimeFactorsWithMultiplicity(): Unit = {
+    println(findPrimeFactorsWithMultiplicity(315))
+    println(findPrimeFactorsWithMultiplicity(133))
+  }
   
   // testIsPrimeNumber()
   // testFindGreatestCommonDivisor()
   // testFindCoPrime()
   // testFindPrimeFactors()
+  // testFindPrimeFactorsWithMultiplicity()
 }
