@@ -41,16 +41,20 @@ object ArithmeticQuestions {
     findGreatestCommonDivisor(a, b) == 1
 
   // p34 eulers totient function
-  def findEulersTotientFunction(a: Int) = 
-    (2 until a).count( e => findCoPrime(a, e))
-
+  def findEulersTotientFunction(a: Int) =
+    (1 until a).count(e => findCoPrime(a, e))
 
   // p35 find prime factors of a number
   def findPrimeFactors(n: Int): List[Int] = {
-    def findprimelist(i: Int, acc: List[Int], nextPrimes: LazyList[Int]): List[Int] = {
-        if i == 1 then acc.reverse
-        else if i % nextPrimes.head == 0 then findprimelist(i/nextPrimes.head, nextPrimes.head::acc, nextPrimes)
-        else findprimelist(i, acc, nextPrimes.tail) 
+    def findprimelist(
+        i: Int,
+        acc: List[Int],
+        nextPrimes: LazyList[Int]
+    ): List[Int] = {
+      if i == 1 then acc.reverse
+      else if i % nextPrimes.head == 0 then
+        findprimelist(i / nextPrimes.head, nextPrimes.head :: acc, nextPrimes)
+      else findprimelist(i, acc, nextPrimes.tail)
     }
 
     findprimelist(n, Nil, primes)
@@ -59,17 +63,42 @@ object ArithmeticQuestions {
   // p36 determine prime factors with multiplicity
   // i can modify p35 a little or use encoding run length from list questions
   def findPrimeFactorsWithMultiplicity(n: Int): List[(Int, Int)] = {
-    def formatWithMultiplicity[T](l:List[T], acc: List[(T, Int)]): List[(T, Int)] = {
+    def formatWithMultiplicity[T](
+        l: List[T],
+        acc: List[(T, Int)]
+    ): List[(T, Int)] = {
       if l == Nil then acc.reverse
       else {
-        val (first, last) = l.span(_==l.head)
-        formatWithMultiplicity(last, (first.head, first.size)::acc)
+        val (first, last) = l.span(_ == l.head)
+        formatWithMultiplicity(last, (first.head, first.size) :: acc)
       }
     }
 
     formatWithMultiplicity(findPrimeFactors(n), Nil)
   }
-  
+
+  // p37 calculate eulers totient function improved using prime factors
+  def eulersTotientUsingPrimes(n: Int): Int = {
+    findPrimeFactorsWithMultiplicity(n).foldLeft(n) { (acc, e) =>
+      acc * (e._1 - 1) / e._1
+    }
+  }
+
+  // p39 calculate prime in a given range
+  def primesInRange(lower: Int, higher: Int): List[Int] = {
+    primes.dropWhile { _ < lower }.takeWhile { _ <= higher }.toList
+  }
+
+  // p40 goldbach's conjecture
+  def goldbach(n: Int): Option[(Int, Int)] = {
+    primes.takeWhile(_ < n).find { p => isPrime(n - p) }.map(p => (p, n - p))
+  }
+
+  // p41 given a range print all goldbach's conjecture
+  def printGoldBach(r: Range): Unit = for {
+    a <- r
+    if a % 2 == 0
+  } println(goldbach(a).get)
 }
 
 object TestArithmeticQuestions extends App {
@@ -90,14 +119,14 @@ object TestArithmeticQuestions extends App {
     println(findGreatestCommonDivisor(123, 123))
   }
 
-  // test is two numbers co prime    
+  // test is two numbers co prime
   def testFindCoPrime(): Unit = {
     println(findCoPrime(5, 50))
     println(findCoPrime(51, 50))
   }
 
   // test prime factors
-  def testFindPrimeFactors():Unit = {
+  def testFindPrimeFactors(): Unit = {
     println(findPrimeFactors(315))
     println(findPrimeFactors(133))
   }
@@ -107,10 +136,30 @@ object TestArithmeticQuestions extends App {
     println(findPrimeFactorsWithMultiplicity(315))
     println(findPrimeFactorsWithMultiplicity(133))
   }
-  
+
+  // test eulers totient function
+  def testEulersTotient(): Unit = {
+    println(findEulersTotientFunction(66))
+    println(findEulersTotientFunction(234))
+  }
+
+  // test eulers totient function using primes
+  def testEulersTotientUsingPrimes(): Unit = {
+    println(eulersTotientUsingPrimes(66))
+    println(eulersTotientUsingPrimes(234))
+  }
+
+  // test goldback list 
+  def testGoldbachList():Unit = {
+    printGoldBach(Range(19,91))
+  }
+
   // testIsPrimeNumber()
   // testFindGreatestCommonDivisor()
   // testFindCoPrime()
   // testFindPrimeFactors()
   // testFindPrimeFactorsWithMultiplicity()
+  // testEulersTotient()
+  // testEulersTotientUsingPrimes()
+  // testGoldbachList()
 }
