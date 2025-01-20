@@ -9,3 +9,8 @@ case object EndNode extends Tree[Nothing]:
 object Node{
     def apply[T](value: T, left: Tree[T] = EndNode, right: Tree[T] = EndNode) = new Node(value, left, right)
 }
+
+
+object Tree {
+    def createCompletelyBalancedBTs[T](nodesCount: Int, value:T = "x") = CreateBTsExercises.completelyBalancedBTs(value)(nodesCount)
+}

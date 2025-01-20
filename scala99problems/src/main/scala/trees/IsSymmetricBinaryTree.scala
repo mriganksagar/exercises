@@ -4,27 +4,30 @@
  */
 
 // writing a method to check whether two tree have same structure or not. ignoring values
-def haveSameStructure[T](a: Tree[T], b: Tree[T]): Boolean = (a, b) match {
-  case (Node(_, tree1left, tree1right), Node(_, tree2left, tree2right)) =>
-    haveSameStructure(tree1left, tree2left) && haveSameStructure(
-      tree1right,
-      tree2right
-    )
-  case (EndNode, EndNode) => true
-  case _                  => false
-}
 
-def haveMirrorStructure[T](a: Tree[T], b: Tree[T]): Boolean = (a, b) match {
-  case (Node(_, tree1left, tree1right), Node(_, tree2left, tree2right)) =>
-    haveMirrorStructure(tree1left, tree2right) && haveMirrorStructure(
-      tree1right,
-      tree2left
-    )
-  case (EndNode, EndNode) => true
-  case _                  => false
+object shapeBTsExercises {
+  def haveSameStructure[T](a: Tree[T], b: Tree[T]): Boolean = (a, b) match {
+    case (Node(_, tree1left, tree1right), Node(_, tree2left, tree2right)) =>
+      haveSameStructure(tree1left, tree2left) && haveSameStructure(
+        tree1right,
+        tree2right
+      )
+    case (EndNode, EndNode) => true
+    case _                  => false
+  }
+  
+  def haveMirrorStructure[T](a: Tree[T], b: Tree[T]): Boolean = (a, b) match {
+    case (Node(_, tree1left, tree1right), Node(_, tree2left, tree2right)) =>
+      haveMirrorStructure(tree1left, tree2right) && haveMirrorStructure(
+        tree1right,
+        tree2left
+      )
+    case (EndNode, EndNode) => true
+    case _                  => false
+  }
+  
+  def isMirroredStructure[T](a: Tree[T]): Boolean = haveMirrorStructure(a, a)  
 }
-
-def isMirroredStructure[T](a: Tree[T]): Boolean = haveMirrorStructure(a, a)
 
 object P66Demo extends App {
 
@@ -39,7 +42,7 @@ object P66Demo extends App {
 
   // println(haveMirrorStructure(t1, t2))
 
-  println(haveMirrorStructure(t3, t5))
+  println(shapeBTsExercises.haveMirrorStructure(t3, t5))
   // println(t3.toString())
   // println(t5.toString())
   // println(haveMirrorStructure(t3, t3))
@@ -62,5 +65,5 @@ object P66Demo extends App {
     )
   )
 
-  println(isMirroredStructure(aMirroredTree)) // prints true
+  println(shapeBTsExercises.isMirroredStructure(aMirroredTree)) // prints true
 }
