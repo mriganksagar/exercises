@@ -25,6 +25,11 @@ object CreateBTsExercises {
                 } yield combinedTree
         }
     }
+
+    import ShapeBTsExercises._
+    def symmetricCompletelyBalancedBTs[T](v: T)(n: Int): List[Tree[T]] = 
+        completelyBalancedBTs(v)(n).filter(isMirroredStructure)
+    
 }
 object P55Demo extends App {
     println(CreateBTsExercises.completelyBalancedBTs("x")(4))

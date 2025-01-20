@@ -5,7 +5,7 @@
 
 // writing a method to check whether two tree have same structure or not. ignoring values
 
-object shapeBTsExercises {
+object ShapeBTsExercises {
   def haveSameStructure[T](a: Tree[T], b: Tree[T]): Boolean = (a, b) match {
     case (Node(_, tree1left, tree1right), Node(_, tree2left, tree2right)) =>
       haveSameStructure(tree1left, tree2left) && haveSameStructure(
@@ -42,7 +42,7 @@ object P66Demo extends App {
 
   // println(haveMirrorStructure(t1, t2))
 
-  println(shapeBTsExercises.haveMirrorStructure(t3, t5))
+  println(ShapeBTsExercises.haveMirrorStructure(t3, t5))
   // println(t3.toString())
   // println(t5.toString())
   // println(haveMirrorStructure(t3, t3))
@@ -65,5 +65,5 @@ object P66Demo extends App {
     )
   )
 
-  println(shapeBTsExercises.isMirroredStructure(aMirroredTree)) // prints true
+  println(ShapeBTsExercises.isMirroredStructure(aMirroredTree)) // prints true
 }
