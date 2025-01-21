@@ -2,7 +2,7 @@ sealed trait Tree[+T]{
     def isMirror: Boolean = ShapeBTsExercises.isMirroredStructure(this)
     def isSimilarTo[U](t: Tree[U]): Boolean = ShapeBTsExercises.haveSameStructure(this, t)
     def isMirrorTo[U](t: Tree[U]): Boolean = ShapeBTsExercises.haveMirrorStructure(this, t)
-    def countNodes: Int = CreateBTsExercises.countNodes(this)
+    def countNodes: Int = TreeOps.countNodes(this)
 }
 
 case class Node[+T](value: T, left: Tree[T], right: Tree[T]) extends Tree[T]:
