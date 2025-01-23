@@ -5,6 +5,7 @@
  */
 import CreateBTsExercises.constructHeightBalancedBTs
 import scala.annotation.tailrec
+import CreateBTsExercises.constructHeapBT
 
 object CreateBTsExercises {
     def completelyBalancedBTs[T](v: T)(n: Int): List[Tree[T]] = {
@@ -113,9 +114,21 @@ object CreateBTsExercises {
             if hBalTree.countNodes == nodes
         } yield hBalTree
     
+    /* 
+      P63: construct a complete binary tree
+      a complete binary tree is like heap fill a level before its next
+      and left before right
+     */
+
+    def constructHeapBT[T](n: Int, v: T): Tree[T] = 
+        def auxConstruct(i: Int): Tree[T] =
+            if i > n then EndNode
+            else Node(v, auxConstruct(2*i), auxConstruct(2*i+1))
+        auxConstruct(1)
 }
-object P55Demo extends App {
+object ProblemsDemo extends App {
     // println(CreateBTsExercises.completelyBalancedBTs("x")(4))
     // println(constructHeightBalancedBTs("x")(3))
 
+    println(constructHeapBT(6,"x"))
 }
