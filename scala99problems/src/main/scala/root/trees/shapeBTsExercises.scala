@@ -1,3 +1,7 @@
+package root.trees
+
+import root.{Tree, Node, EndNode}
+
 /*
     P56 (**) Symmetric binary trees.
     symmetric if you can draw a vertical line through the root node and then the right subtree is the mirror image of the left subtree.

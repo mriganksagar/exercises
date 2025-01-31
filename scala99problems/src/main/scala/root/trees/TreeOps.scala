@@ -1,3 +1,7 @@
+package root.trees
+
+import root.{Tree, Node, EndNode}
+
 object TreeOps {
     /*
             P61: count leaves of a Binary tree

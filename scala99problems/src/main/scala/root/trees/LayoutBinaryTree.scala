@@ -1,10 +1,9 @@
+package root.trees
+
+import root.{Tree, Node, EndNode}
+
 class PositionedNode[T](v: T, l: Tree[T], r: Tree[T], val x: Int, val y: Int)
     extends Node(v, l, r)
-
-object PositionedNode {
-    def apply[T](v: T, l: Tree[T], r: Tree[T], x: Int, y: Int) =
-        new PositionedNode(v, l, r, x, y)
-}
 
 object LayoutBinaryTree {
 
@@ -46,10 +45,12 @@ object LayoutBinaryTree {
             case EndNode => EndNode
             case Node(value, left, right) => {
                 val edgeWidth = Math.pow(2, totalDepth - y).toInt
-                Node(
+                PositionedNode(
                   value,
                   auxLayout(left, x - edgeWidth, y + 1),
-                  auxLayout(right, x + edgeWidth, y + 1)
+                  auxLayout(right, x + edgeWidth, y + 1),
+                  x,
+                  y
                 )
             }
 

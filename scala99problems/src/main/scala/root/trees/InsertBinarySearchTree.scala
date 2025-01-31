@@ -1,3 +1,6 @@
+package root.trees
+
+import root.{Tree, Node, EndNode}
 //Write a function to add an element to a binary search tree.
 
 object BinarySearchTree {

@@ -1,3 +1,6 @@
+package root.trees
+
+import root.{Tree, Node, EndNode}
 /*
     P55 (**) Construct completely balanced binary trees.
     this is an exercise to create a balanced binary tree given the number of nodes

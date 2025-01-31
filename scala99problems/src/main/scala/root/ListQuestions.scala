@@ -1,3 +1,5 @@
+package root
+
 import scala.annotation.tailrec
 object ListQuestions {
   def lastElementOfList[T](l: List[T]): Option[T] = {

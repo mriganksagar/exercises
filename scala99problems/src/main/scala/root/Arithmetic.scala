@@ -1,3 +1,5 @@
+package root
+
 import scala.math.Numeric.Implicits._
 import scala.math.Ordering.Implicits._
 

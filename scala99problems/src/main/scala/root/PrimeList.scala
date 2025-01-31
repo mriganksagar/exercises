@@ -1,3 +1,5 @@
+package root
+
 // Parametric sieve method takes in first value and filter the tail based on that, recursively 
 def sieve[T](lzList: LazyList[T]) (f: T => T => Boolean): LazyList[T] = { lzList match
     case e#::t => e #::sieve(t.filterNot(f(e)))(f)
@@ -6,6 +8,6 @@ def sieve[T](lzList: LazyList[T]) (f: T => T => Boolean): LazyList[T] = { lzList
 
 val primes = sieve(LazyList.from(2))((a:Int) => (b: Int) => b%a == 0)
 
-def main(args: Array[String]): Unit = {
+object DemoPrime extends App{
     print(primes.take(100).toList)
 }
