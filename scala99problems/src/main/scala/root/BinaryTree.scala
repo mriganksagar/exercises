@@ -47,3 +47,21 @@ object Tree {
     ) = CreateBTsExercises.symmetricCompletelyBalancedBTs(value)(nodesCount)
 }
 
+class PositionedNode[T](v: T, l: Tree[T], r: Tree[T], val x: Int, val y: Int)
+    extends Node(v, l, r)
+
+type PositionedTree[T] = PositionedNode[T] | EndNode.type
+
+// in case we want to add methods to this typealia, extend with typeclass
+extension[T](a: PositionedTree[T])
+    def abc: Unit = println("abc")
+
+
+object demoo extends App{
+    val a: PositionedTree[Int] = PositionedNode(1,EndNode,EndNode,5,3)
+    // exhaustive pattern matching
+    a match
+        case a: PositionedNode[Int] => println("p node")
+        case EndNode => println("end")
+    
+}

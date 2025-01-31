@@ -1,9 +1,6 @@
 package root.trees
 
-import root.{Tree, Node, EndNode}
-
-class PositionedNode[T](v: T, l: Tree[T], r: Tree[T], val x: Int, val y: Int)
-    extends Node(v, l, r)
+import root.{Tree, Node, EndNode, PositionedNode, PositionedTree}
 
 object LayoutBinaryTree {
 
@@ -41,18 +38,19 @@ object LayoutBinaryTree {
         val totalDepth = root.maxDepth
         val leftMostDepth = root.leftMostDepth
 
-        def auxLayout(root: Tree[T], x: Int, y: Int): Tree[T] = root match
-            case EndNode => EndNode
-            case Node(value, left, right) => {
-                val edgeWidth = Math.pow(2, totalDepth - y).toInt
-                PositionedNode(
-                  value,
-                  auxLayout(left, x - edgeWidth, y + 1),
-                  auxLayout(right, x + edgeWidth, y + 1),
-                  x,
-                  y
-                )
-            }
+        def auxLayout(root: Tree[T], x: Int, y: Int): PositionedTree[T] =
+            root match
+                case EndNode => EndNode
+                case Node(value, left, right) => {
+                    val edgeWidth = Math.pow(2, totalDepth - y).toInt
+                    PositionedNode(
+                      value,
+                      auxLayout(left, x - edgeWidth, y + 1),
+                      auxLayout(right, x + edgeWidth, y + 1),
+                      x,
+                      y
+                    )
+                }
 
         val x_of_root = (2 to leftMostDepth)
             .map((n) => Math.pow(2, totalDepth - n).toInt)

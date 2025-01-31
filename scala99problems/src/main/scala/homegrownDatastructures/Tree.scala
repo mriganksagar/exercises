@@ -1,56 +1,55 @@
 package homegrownDatastructures
 
+// A representation of Tree and specific type of trees using inhertence and OOP
+// My own implementation , (might have some issues too)
 
-
-sealed trait TreeType
-object TreeType {
-    trait Positioned extends TreeType
-    trait Bounded extends TreeType
+sealed trait Tree[+T]{
+    // common tree methods
 }
 
-sealed trait Tree[+T, +X <: TreeType]
-
-sealed trait PositionedTree[+T] extends Tree[T, TreeType.Positioned] {
+sealed trait PositionedTree[+T] extends Tree[T] {
     // methods specific to PositionedTree
 }
-sealed trait BoundedTree[+T] extends Tree[T, TreeType.Bounded] {
+sealed trait BoundedTree[+T] extends Tree[T] {
     // methods specific to BoundedTree
 }
 
-case class Node[+T, +X <: TreeType](
+case class Node[+T](
     value: T,
-    left: Tree[T, X] = EndNode,
-    right: Tree[T, X] = EndNode
-) extends Tree[T, X] {
+    left: Tree[T] = EndNode,
+    right: Tree[T] = EndNode
+) extends Tree[T] {
     // methods common for node
 }
 
-case object EndNode extends Tree[Nothing, Nothing] {
+object EndNode extends Tree[Nothing] with PositionedTree[Nothing] with BoundedTree[Nothing]{
     // all methods for all types of endnodes
     // by making it Tree[Nothing, Nothing] i can use this EndNodee for all treeType
 }
 
-
 class PositionedNode[+T](
     v: T,
-    l: Tree[T, TreeType.Positioned],
-    r: Tree[T, TreeType.Positioned],
+    l: Tree[T],
+    r: Tree[T],
     val x: Int,
     val y: Int
 ) extends Node(v, l, r)
     with PositionedTree[T]
 
-
 class BoundedNode[+T](
     v: T,
-    l: Tree[T, TreeType.Bounded],
-    r: Tree[T, TreeType.Bounded],
+    l: Tree[T],
+    r: Tree[T],
     val bounds: List[(Int, Int)]
 ) extends Node(v, l, r)
     with BoundedTree[T]
 
+object deemo extends App {
+    val v = PositionedNode(4, PositionedNode(1, EndNode, EndNode, 0,0), EndNode, 1,1)
 
-/* 
-    Using this structure
-    I can represent subtypes of trees 
- */
+    println(v.getClass())
+    println(v.isInstanceOf[PositionedTree[Int]])
+    println(v.isInstanceOf[Node[Int]])
+    println(EndNode.isInstanceOf[PositionedTree[Int]])
+    println(EndNode.isInstanceOf[Tree[Int]])
+}
