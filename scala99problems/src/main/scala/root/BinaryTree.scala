@@ -47,18 +47,27 @@ object Tree {
     ) = CreateBTsExercises.symmetricCompletelyBalancedBTs(value)(nodesCount)
 }
 
+/* One problem it has:
+    PositionedNode can't have PositionedTree as subtrees  
+ */
+type PositionedTree[T] = PositionedNode[T] | EndNode.type
+
 class PositionedNode[T](v: T, l: Tree[T], r: Tree[T], val x: Int, val y: Int)
     extends Node(v, l, r)
 
-type PositionedTree[T] = PositionedNode[T] | EndNode.type
+class BoundedNode[T](v: T, l: Tree[T])   
 
-// in case we want to add methods to this typealia, extend with typeclass
-extension[T](a: PositionedTree[T])
-    def abc: Unit = println("abc")
+
+/* 
+    in case we want to add methods to this typealia, extend with typeclass
+    extension[T](a: PositionedTree[T])
+        def abc: Unit = println("abc")
+ */
 
 
 object demoo extends App{
     val a: PositionedTree[Int] = PositionedNode(1,EndNode,EndNode,5,3)
+    println(a.isInstanceOf[Tree[Int]]) // prints yes
     // exhaustive pattern matching
     a match
         case a: PositionedNode[Int] => println("p node")
