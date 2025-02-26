@@ -5,6 +5,11 @@ package homegrownDatastructures
 
 sealed trait Tree[+T] {
     // common tree methods
+
+    def preorder: List[T]
+    def inorder: List[T]
+
+    def dotString: String
 }
 
 sealed trait PositionedTree[+T] extends Tree[T] {
@@ -24,8 +29,8 @@ sealed trait BoundedTree[+T](val bounds: List[(Int, Int)]) extends Tree[T] {
 // }
 
 /* 
-    creating it so that left of positioned node can be positioned node instead of just node
-    however i had to remove +T covariant because of extending it in PositionedNode and bounding node
+    creating it (U <: Tree) so that subtrees of positioned node can be positioned node instead of just node
+    however I had to remove +T covariant because of extending it in PositionedNode and bounding node
     it was giving error that it appears in contravariant position i.e when Node instantiation 
  */
 
@@ -35,10 +40,23 @@ case class Node[U <: Tree, T](
     right: U[T] = EndNode
 ) extends Tree[T] {
     // common methods
+    override def toString(): String = s"$value(${left.toString}, ${right.toString})"
+
+    override def preorder: List[T] = value :: left.preorder ::: right.preorder
+
+    override def inorder: List[T] = left.inorder ::: (value :: right.inorder)
+    
+    override def dotString: String = s"$value${left.dotString}${right.dotString}"
 }
 
 sealed trait EndNode extends Tree[Nothing] {
     // all common methods
+    override def toString(): String = ""
+
+    override def preorder = Nil
+
+    override def inorder = Nil
+    override def dotString: String = "."
 }
 
 case object EndNode extends EndNode
@@ -97,7 +115,7 @@ object deemo extends App {
     println(v.isInstanceOf[Node[Tree, Int]])    // true
     println(EndNode.isInstanceOf[Tree[Int]])   // true
 
-    val x: Tree[Int] = Node(1, EndNode, EndNode)
+    val x: Tree[Int] = Node(1, Node(10), Node(20))
 
 
     // exhaustive matching works well in case of simple Simple Trees
@@ -109,4 +127,8 @@ object deemo extends App {
     v match
         case PositionedNode(Node(value, left, right), x, y) =>
             println(s" $left, $right")
+
+    println(x.toString())
+    println(x.preorder)
+    println(x.inorder)
 }
