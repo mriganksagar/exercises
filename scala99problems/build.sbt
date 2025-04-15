@@ -1,6 +1,6 @@
 val scala3Version = "3.5.2"
 
-lazy val root = project
+lazy val scala99problems = project
   .in(file("."))
   .settings(
     name := "scala99problems",
@@ -8,5 +8,17 @@ lazy val root = project
 
     scalaVersion := scala3Version,
 
-    libraryDependencies += "org.scalameta" %% "munit" % "1.0.0" % Test
+    libraryDependencies ++= Seq(
+      "org.scalameta" %% "munit" % "1.0.0" % Test,
+      "org.scalatest" %% "scalatest" % "3.2.18" % Test
+    )    
+  )
+
+lazy val dsa = project
+  .in(file("dsa"))
+  .settings(
+    name := "dsa",
+    scalaVersion := scala3Version,
+    // other settings
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.18" % Test
   )
