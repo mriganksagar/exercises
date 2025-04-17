@@ -1,4 +1,3 @@
-// given a station and its neighbouring station
 import scala.collection.immutable.TreeMap
 
 object GraphBFS {
@@ -24,7 +23,7 @@ object GraphBFS {
     aux(List(List(start)), target, Set(start)).map(_.reverse)
   }
 
-  // I am considering positive weights
+  // Djikstra, I am considering positive weights
   case class Edge(weight: Int, to: Int)
   type Graph = Map[Int, List[Edge]]
   case class Path(cost: Int, path: List[Int])
@@ -60,7 +59,7 @@ object GraphBFS {
   }
 
   // returns LazyList of all paths; path is: target -> Path(weight, path)
-  def bfsShortestPaths(graph: Graph)(start: Int): LazyList[(Int, Path)] = {
+  def bfsShortestPathsWeightedGLazy(graph: Graph)(start: Int): LazyList[(Int, Path)] = {
     def aux(
         paths: TreeMap[Int, Path],
         visited: Set[Int]
